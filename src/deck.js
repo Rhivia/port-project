@@ -4,7 +4,9 @@ import {
   Animated, 
   PanResponder, 
   Dimensions,
-  StyleSheet
+  StyleSheet,
+  LayoutAnimation,
+  UIManager
 } from 'react-native';
 // import resetPosition from './helpers';
 
@@ -42,6 +44,11 @@ export default class Deck extends React.Component {
     });
 
     this.state = { panResponder, position, index: 0 };
+  }
+
+  componentWillUpdate() {
+    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true); // Android validation
+    LayoutAnimation.spring();
   }
 
   forceSwipe(direction) {
@@ -92,7 +99,15 @@ export default class Deck extends React.Component {
         return (
           <Animated.View
             key={item.id}
-            style={[this.getCardStyle(), styles.cardStyle, { zIndex: i * -1 }]}
+            style={[
+              this.getCardStyle(), 
+              styles.cardStyle, 
+              { 
+                zIndex: i * -1,
+                top: 60,
+                // elevation: 1
+              }
+            ]}
             {...this.state.panResponder.panHandlers}
           >
             {this.props.renderCard(item)}
